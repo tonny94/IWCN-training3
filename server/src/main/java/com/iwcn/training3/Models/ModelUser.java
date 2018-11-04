@@ -1,31 +1,23 @@
 package com.iwcn.training3.Models;
 
 import java.util.List;
-
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.FetchType;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
-public class ModelUser implements UserDetailsService {
+public class ModelUser{
 	@Id
 	private String nombre;
 	private String contraseña;
-	@ElementCollection(fetch = FetchType.EAGER)
-	private List<GrantedAuthority> roles;
+	//@ElementCollection(fetch = FetchType.EAGER)
+	//private List<GrantedAuthority> roles;
+	private List<String> roles;
 	
 	public ModelUser () {}
 	
-	public ModelUser(String name, String pass, List<GrantedAuthority> roles) {
+	public ModelUser(String name, String pass, List<String> roles) {
 		this.nombre = name;
-		this.contraseña = new BCryptPasswordEncoder().encode(pass);
+		this.contraseña = pass;
 		this.roles = roles;
 	}
 
@@ -45,17 +37,12 @@ public class ModelUser implements UserDetailsService {
 		this.contraseña = contraseña;
 	}
 
-	public List<GrantedAuthority> getRoles() {
+	public List<String> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<GrantedAuthority> roles) {
+	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
