@@ -21,7 +21,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.iwcn.training3.Models.ModelError;
 import com.iwcn.training3.Models.ModelProduct;
+import com.iwcn.training3.Models.ModelUser;
 import com.iwcn.training3.Repositories.ProductRepository;
+import com.iwcn.training3.Repositories.UserRepository;
 
 @RestController
 public class ControllerProduct {
@@ -30,6 +32,8 @@ public class ControllerProduct {
 	//Variables
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
+	private UserRepository userRepository;
 	
 	//Todos los productos
 	@RequestMapping(value = "/list/", method = RequestMethod.GET)
@@ -56,28 +60,39 @@ public class ControllerProduct {
     }
 	
     //Nuevo producto
-    @RequestMapping(value = "/user/", method = RequestMethod.POST)
-    public ResponseEntity<?> createProduct(@ModelAttribute("product") ModelProduct product, UriComponentsBuilder ucBuilder) {
+    @RequestMapping(value = "/add/", method = RequestMethod.GET)
+    public ResponseEntity<ModelProduct> createProduct(@ModelAttribute("product") ModelProduct product, UriComponentsBuilder ucBuilder) {
         //logger.info("Creando Producto : {}", product);
  
     	if(productRepository.findByCode(product.getCode()) != null) {
             return new ResponseEntity(new ModelError("El producto " + product.getName() + " ya existe.","","",""),HttpStatus.CONFLICT);
         }
-    	productRepository.save(new ModelProduct(product.getCode(),product.getName(),product.getDescription(),product.getPrice()));
+    	//ModelProduct product
+    	productRepository.save(product);
         
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/resume/{code}").buildAndExpand(product.getCode()).toUri());
-        return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+        //HttpHeaders headers = new HttpHeaders();
+        //headers.setLocation(ucBuilder.path("/resume/{code}").buildAndExpand(product.getCode()).toUri());
+        return new ResponseEntity<ModelProduct>(product,HttpStatus.OK);//(headers, HttpStatus.CREATED);
     }
     
     //Ver producto
     @RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUser(@PathVariable("id") String id) {
+    public ResponseEntity<?> getProduct(@PathVariable("id") String id) {
         ModelProduct product = productRepository.findByCode(id);
         if (product == null) {
         	return new ResponseEntity(new ModelError("El producto " + id + " no existe.","","",""),HttpStatus.CONFLICT);
             }
         return new ResponseEntity<ModelProduct>(product, HttpStatus.OK);
+    }
+    
+  //Devolver usuario
+    @RequestMapping(value = "/user/{name}", method = RequestMethod.GET)
+    public ResponseEntity<?> getUser(@PathVariable("name") String name) {
+        ModelUser user = userRepository.findByNombre(name);
+        if (user == null) {
+        	return new ResponseEntity(new ModelError("El usuario " + name + " no existe.","","",""),HttpStatus.CONFLICT);
+            }
+        return new ResponseEntity<ModelUser>(user, HttpStatus.OK);
     }
     
 }
