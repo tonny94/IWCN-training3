@@ -32,8 +32,8 @@ public class ControllerProduct {
 	//Variables
 	@Autowired
 	private ProductRepository productRepository;
-	@Autowired
-	private UserRepository userRepository;
+//	@Autowired
+//	private UserRepository userRepository;
 	
 	//Todos los productos
 	@RequestMapping(value = "/list/", method = RequestMethod.GET)
@@ -86,13 +86,13 @@ public class ControllerProduct {
     }
     
   //Devolver usuario
-    @RequestMapping(value = "/user/{name}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUser(@PathVariable("name") String name) {
-        ModelUser user = userRepository.findByNombre(name);
-        if (user == null) {
-        	return new ResponseEntity(new ModelError("El usuario " + name + " no existe.","","",""),HttpStatus.CONFLICT);
-            }
-        return new ResponseEntity<ModelUser>(user, HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/user/{name}", method = RequestMethod.GET)
+//    public ResponseEntity<?> getUser(@PathVariable("name") String name) {
+//        ModelUser user = userRepository.findByNombre(name);
+//        if (user == null) {
+//        	return new ResponseEntity(new ModelError("El usuario " + name + " no existe.","","",""),HttpStatus.CONFLICT);
+//            }
+//        return new ResponseEntity<ModelUser>(user, HttpStatus.OK);
+//    }
     
 }
